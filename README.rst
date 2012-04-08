@@ -8,7 +8,7 @@
 :Web site: https://github.com/berianjames/ICCRankings
 :Copyright: This document has been placed in the public domain.
 :License: This code is released under the MIT license.
-:Requires: BeautifulSoup4, urllib2, datetime, numpy, dateutil
+:Requires: BeautifulSoup4, urllib2, datetime, dateutil
 
 ====================
 ICC Rankings package

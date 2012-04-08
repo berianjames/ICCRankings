@@ -1,11 +1,11 @@
 import datetime
-from numpy import nan
 from bs4 import BeautifulSoup
 import urllib2
 
 class Team:
 
-    def __init__(self,name=None,points=nan,matches=nan,date=datetime.date.today()):
+    def __init__(self,name=None,points=float('nan'),matches=float('nan'),
+                 date=datetime.date.today()):
         """Define a team."""
         self.name = name
         self.points = points
@@ -32,7 +32,8 @@ class Team:
 
 class Series:
 
-    def __init__(self,teamA=None,teamB=None,nmatches=nan,winsA=nan,winsB=nan,
+    def __init__(self,teamA=None,teamB=None,nmatches=float('nan'),
+                 winsA=float('nan'),winsB=float('nan'),
                  date = datetime.date.today()):
         """Define a series."""
         # Parse series data
