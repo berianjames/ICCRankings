@@ -1,8 +1,8 @@
 import ICCRankings
 
 # Test generation of empty team
-x = ICCRankings.Team()
-print x
+#x = ICCRankings.Team()
+#print x
 
 # Test scraping of rankings from ICC
 teams = ICCRankings.get_current_teams()
@@ -23,3 +23,7 @@ print S1, S2 # Print series
 teams.add_series(S1)
 teams.add_series(S2)
 print teams
+
+# Get historical record of all series
+teamlist = teams.lookup.keys()
+series_history = ICCRankings.get_series_history(teamlist=teamlist)

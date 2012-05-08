@@ -175,4 +175,75 @@ def get_current_teams():
             )
 
     return current_teams
+
+def get_series_history(teamlist=[]):
+    import re
+
+    # Grab series list from ESPNcricinfo statsguru
+    soup = BeautifulSoup(
+        urllib2.urlopen('http://stats.espncricinfo.com/ci/content/records/335431.html')
+        )
+
+    tables = soup('table','engineTable')
+    history = tables[0]
+    future = tables[1]
+
+    # Parse history into rows
+    rows = history('tr')[1:]
+
+    # Generate SeriesList from history
+    nteamlist = []
+    for row in rows:
+
+        # Parse row into parts
+        row_data = row('td')
+        names_str = row_data[0]('a')[0].contents[0]
+        year = row_data[1].contents[0]
+        winner = row_data[3].contents[0]
+        result = row_data[4].contents
+
+        # Parse team names
+        team_loc = [names_str.find(team) for team in teamlist]
+        team_found = [loc>0 for loc in team_loc ]
+
+        # Some error checking
+        if len(result) == 0: # Skip series with no result data
+            continue
+        if sum(team_found) < 2: # Series not between two teams in teamlist
+            continue
+        if sum(team_found) > 2:
+            # This (incorrectly) excludes three tests, where one of the teams
+            #  named in the list in not playing, but hosting. Should be fixed later.
+            # See serieslocs below.
+        #    print names_str, team_found
+            continue
+
+        # Get team names
+        seriesteams = [teamlist[i] for i in range(len(teamlist)) if team_found[i]]
+        #serieslocs = [loc[i] for i in range(len(teamlist)) if team_found[i]]
+
+        # Get scores
+        scores_list = re.findall(r'\d',result[0])
+        nmatches = int(scores_list[2])
+
+        # Put teams and result in series object
+        if winner == 'drawn':
+            teamA = seriesteams[0]
+            teamB = seriesteams[1]
+            winsA = int(scores_list[0])
+            winsB = int(scores_list[1])
+        elif seriesteams[0] == winner:
+            teamA = seriesteams[0]
+            teamB = seriesteams[1]
+            winsA = int(scores_list[0])
+            winsB = int(scores_list[1])
+        else:
+            teamA = seriesteams[1]
+            teamB = seriesteams[0]
+            winsA = int(scores_list[0])
+            winsB = int(scores_list[1])
+
+        print teamA, winsA, ':', winsB, teamB, nmatches 
+
+    return history
     
